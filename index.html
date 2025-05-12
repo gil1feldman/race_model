@@ -131,7 +131,6 @@
 <input type="file" id="imageUpload" accept="image/*">
 
 <form id="raceForm">
-  <!-- כל השאלות - ללא שינוי -->
   <fieldset>
     <legend>1. זיהוי (Recognize)</legend>
     <div class="question">האם יש לידיעה מקור מהימן?<br>
@@ -184,8 +183,7 @@
     </div>
   </fieldset>
 
-  <button type="button" onclick="calculateScore()">חשב ציון מהימנות</button>
-  <button type="button" onclick="generateSummary()">צור סיכום מילולי</button>
+  <button type="button" onclick="calculateAndSummarize()">חשב ציון וסכם</button>
 </form>
 
 <div class="result" id="result"></div>
@@ -199,7 +197,8 @@
     toggleBtn.classList.toggle("open");
   }
 
-  function calculateScore() {
+  function calculateAndSummarize() {
+    // חישוב ציון
     const radios = document.querySelectorAll('input[type="radio"]:checked');
     let score = 0;
     radios.forEach(rb => score += parseInt(rb.value));
@@ -210,47 +209,45 @@
     else if (percent >= 40) verdict = '🟠 חשוד';
     else verdict = '🔴 תוכן מניפולטיבי';
     document.getElementById('result').innerText = `ציון: ${percent}% מהימנות\nהערכה: ${verdict}`;
-  }
 
-  function generateSummary() {
-  const questions = [
-    { name: 'recognize1', pos: 'קיים מקור מהימן', neg: 'לא קיים מקור מהימן' },
-    { name: 'recognize2', pos: 'קיים מועד או תאריך ברור', neg: 'אין מועד או תאריך ברור' },
-    { name: 'recognize3', pos: 'השפה ניטרלית', neg: 'השפה דרמטית או רגשית' },
-    { name: 'analyze1', pos: 'הידיעה מבוססת על עובדות', neg: 'הידיעה מבוססת על רגשות' },
-    { name: 'analyze2', pos: 'מוצגים כמה צדדים של הסיפור', neg: 'מוצג רק צד אחד של הסיפור' },
-    { name: 'context1', pos: 'יש מידע דומה במקורות נוספים', neg: 'אין מידע דומה במקורות נוספים' },
-    { name: 'context2', pos: 'ההקשר הרחב של הידיעה ברור', neg: 'הידיעה חסרת הקשר רחב' },
-    { name: 'evaluate1', pos: 'הידיעה אינה מכוונת לעורר רגשות שליליים', neg: 'הידיעה מכוונת לעורר כעס, פחד או שנאה' },
-    { name: 'evaluate2', pos: 'המשיב היה משתף את הידיעה', neg: 'המשיב לא היה משתף את הידיעה' }
-  ];
+    // סיכום מילולי
+    const questions = [
+      { name: 'recognize1', pos: 'קיים מקור מהימן', neg: 'לא קיים מקור מהימן' },
+      { name: 'recognize2', pos: 'קיים מועד או תאריך ברור', neg: 'אין מועד או תאריך ברור' },
+      { name: 'recognize3', pos: 'השפה ניטרלית', neg: 'השפה דרמטית או רגשית' },
+      { name: 'analyze1', pos: 'הידיעה מבוססת על עובדות', neg: 'הידיעה מבוססת על רגשות' },
+      { name: 'analyze2', pos: 'מוצגים כמה צדדים של הסיפור', neg: 'מוצג רק צד אחד של הסיפור' },
+      { name: 'context1', pos: 'יש מידע דומה במקורות נוספים', neg: 'אין מידע דומה במקורות נוספים' },
+      { name: 'context2', pos: 'ההקשר הרחב של הידיעה ברור', neg: 'הידיעה חסרת הקשר רחב' },
+      { name: 'evaluate1', pos: 'הידיעה אינה מכוונת לעורר רגשות שליליים', neg: 'הידיעה מכוונת לעורר כעס, פחד או שנאה' },
+      { name: 'evaluate2', pos: 'המשיב היה משתף את הידיעה', neg: 'המשיב לא היה משתף את הידיעה' }
+    ];
 
-  let positives = [], negatives = [];
+    let positives = [], negatives = [];
 
-  questions.forEach(q => {
-    const selected = document.querySelector(`input[name="${q.name}"]:checked`);
-    if (selected) {
-      selected.value === "2" ? positives.push(q.pos) : negatives.push(q.neg);
+    questions.forEach(q => {
+      const selected = document.querySelector(`input[name="${q.name}"]:checked`);
+      if (selected) {
+        selected.value === "2" ? positives.push(q.pos) : negatives.push(q.neg);
+      }
+    });
+
+    let output = "";
+
+    if (positives.length > 0) {
+      output += "✅ היבטים המחזקים את מהימנות הידיעה:\n- " + positives.join("\n- ") + "\n";
     }
-  });
 
-  let output = "";
+    if (negatives.length > 0) {
+      output += "\n⚠️ היבטים המחלישים את מהימנות הידיעה:\n- " + negatives.join("\n- ");
+    }
 
-  if (positives.length > 0) {
-    output += "✅ היבטים המחזקים את מהימנות הידיעה:\n- " + positives.join("\n- ") + "\n";
+    if (!output) {
+      output = "לא נבחרו מספיק תשובות ליצירת סיכום.";
+    }
+
+    document.getElementById('summaryResult').innerText = output;
   }
-
-  if (negatives.length > 0) {
-    output += "\n⚠️ היבטים המחלישים את מהימנות הידיעה:\n- " + negatives.join("\n- ");
-  }
-
-  if (!output) {
-    output = "לא נבחרו מספיק תשובות ליצירת סיכום.";
-  }
-
-  document.getElementById('summaryResult').innerText = output;
-}
-
 </script>
 
 </body>
