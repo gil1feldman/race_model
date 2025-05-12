@@ -80,7 +80,14 @@
       background-color: #ffffff;
       width: 100%;
       box-sizing: border-box;
-      margin-bottom: 18px;
+      margin-bottom: 10px;
+    }
+    #previewImage {
+      display: none;
+      max-width: 100%;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
     }
     button {
       background-color: #28a745;
@@ -129,6 +136,7 @@
 
 <label for="imageUpload"><strong>העלה תמונה של הידיעה שברצונך לבדוק:</strong></label>
 <input type="file" id="imageUpload" accept="image/*">
+<img id="previewImage" src="" alt="תצוגה מקדימה של הידיעה">
 
 <form id="raceForm">
   <fieldset>
@@ -197,8 +205,24 @@
     toggleBtn.classList.toggle("open");
   }
 
+  document.getElementById("imageUpload").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById("previewImage");
+
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.src = "";
+      preview.style.display = "none";
+    }
+  });
+
   function calculateAndSummarize() {
-    // חישוב ציון
     const radios = document.querySelectorAll('input[type="radio"]:checked');
     let score = 0;
     radios.forEach(rb => score += parseInt(rb.value));
@@ -210,7 +234,6 @@
     else verdict = '🔴 תוכן מניפולטיבי';
     document.getElementById('result').innerText = `ציון: ${percent}% מהימנות\nהערכה: ${verdict}`;
 
-    // סיכום מילולי
     const questions = [
       { name: 'recognize1', pos: 'קיים מקור מהימן', neg: 'לא קיים מקור מהימן' },
       { name: 'recognize2', pos: 'קיים מועד או תאריך ברור', neg: 'אין מועד או תאריך ברור' },
