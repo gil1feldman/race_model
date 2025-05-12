@@ -14,49 +14,60 @@
       max-width: 850px;
       margin: auto;
     }
+
     h1 {
       color: #003366;
       font-size: 28px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       text-align: center;
       background-color: #d0e4f7;
       padding: 10px;
       border-radius: 10px;
     }
-    .toggle-box {
-      background: #ffffff;
-      border: 1px solid #b3cde0;
-      border-radius: 8px;
-      padding: 14px;
-      margin-bottom: 20px;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
-    }
+
     #toggleBtn {
-      background-color: #005fa3;
-      color: #fff;
+      background-color: transparent;
+      color: #005fa3;
       border: none;
-      padding: 10px 16px;
-      font-size: 15px;
-      border-radius: 5px;
+      font-size: 14px;
+      text-decoration: underline;
       cursor: pointer;
+      padding: 0;
+      float: right;
+      margin-bottom: 10px;
     }
+
     #toggleBtn.open::before {
       content: '-';
-      margin-left: 6px;
+      margin-left: 5px;
     }
+
     #toggleBtn::before {
       content: '+';
-      margin-left: 6px;
+      margin-left: 5px;
     }
+
+    #explanation {
+      background: #f3f7fb;
+      border-right: 4px solid #aac8df;
+      padding: 10px 14px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
     .hidden {
       display: none;
     }
+
     legend {
       font-weight: bold;
       font-size: 17px;
       margin-bottom: 10px;
       color: #1e3a5f;
     }
+
     fieldset {
       border: 1px solid #aac8df;
       border-radius: 8px;
@@ -64,15 +75,19 @@
       margin-bottom: 15px;
       background-color: #f9fbfd;
     }
+
     .question {
       margin-bottom: 12px;
     }
+
     .question label {
       margin-left: 15px;
     }
+
     input[type="radio"] {
       margin-left: 5px;
     }
+
     input[type="file"] {
       padding: 8px;
       border: 1px solid #aaa;
@@ -82,6 +97,7 @@
       box-sizing: border-box;
       margin-bottom: 10px;
     }
+
     #previewImage {
       display: none;
       max-width: 100%;
@@ -89,6 +105,7 @@
       border: 1px solid #ccc;
       border-radius: 8px;
     }
+
     button {
       background-color: #28a745;
       color: white;
@@ -101,9 +118,11 @@
       margin: 20px auto;
       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
+
     button:hover {
       background-color: #218838;
     }
+
     .result {
       margin-top: 25px;
       padding: 16px;
@@ -121,17 +140,16 @@
 
 <h1>בודק מהימנות לידיעה - שיטת RACE</h1>
 
-<div class="toggle-box">
-  <button id="toggleBtn" onclick="toggleExplanation()">מה זה שיטת RACE?</button>
-  <div id="explanation" class="hidden">
-    <p><strong>RACE</strong> היא שיטה לזיהוי וניתוח אמינות של תוכן חדשותי חשוד:</p>
-    <ul>
-      <li><strong>Recognize</strong> – זיהוי סימנים מחשידים בתוכן.</li>
-      <li><strong>Analyze</strong> – ניתוח המסר: עובדות או רגש?</li>
-      <li><strong>Contextualize</strong> – בדיקת הקשר והשלמות.</li>
-      <li><strong>Evaluate</strong> – הערכת מטרת הידיעה.</li>
-    </ul>
-  </div>
+<button id="toggleBtn" onclick="toggleExplanation()">מה זה שיטת RACE?</button>
+
+<div id="explanation" class="hidden">
+  <p><strong>RACE</strong> היא שיטה לזיהוי וניתוח אמינות של תוכן חדשותי חשוד:</p>
+  <ul style="margin-top: 0;">
+    <li><strong>Recognize</strong> – זיהוי סימנים מחשידים בתוכן.</li>
+    <li><strong>Analyze</strong> – ניתוח המסר: עובדות או רגש?</li>
+    <li><strong>Contextualize</strong> – בדיקת הקשר והשלמות.</li>
+    <li><strong>Evaluate</strong> – הערכת מטרת הידיעה.</li>
+  </ul>
 </div>
 
 <label for="imageUpload"><strong>העלה תמונה של הידיעה שברצונך לבדוק:</strong></label>
