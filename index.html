@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>בודק מהימנות לידיעה - שיטת RACE</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      direction: rtl;
+      padding: 20px;
+      background: linear-gradient(to bottom, #e9f0f7, #fefefe);
+      color: #222;
+      line-height: 1.6;
+      max-width: 850px;
+      margin: auto;
+    }
+    h1 {
+      color: #003366;
+      font-size: 28px;
+      margin-bottom: 20px;
+      text-align: center;
+      background-color: #d0e4f7;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    .toggle-box {
+      background: #ffffff;
+      border: 1px solid #b3cde0;
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    }
+    #toggleBtn {
+      background-color: #005fa3;
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      font-size: 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #toggleBtn.open::before {
+      content: '-';
+      margin-left: 6px;
+    }
+    #toggleBtn::before {
+      content: '+';
+      margin-left: 6px;
+    }
+    .hidden {
+      display: none;
+    }
+    legend {
+      font-weight: bold;
+      font-size: 17px;
+      margin-bottom: 10px;
+      color: #1e3a5f;
+    }
+    fieldset {
+      border: 1px solid #aac8df;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: #f9fbfd;
+    }
+    .question {
+      margin-bottom: 12px;
+    }
+    .question label {
+      margin-left: 15px;
+    }
+    input[type="radio"] {
+      margin-left: 5px;
+    }
+    input[type="file"] {
+      padding: 8px;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+      background-color: #ffffff;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 18px;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      display: block;
+      margin: 20px auto;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .result {
+      margin-top: 25px;
+      padding: 16px;
+      border-radius: 8px;
+      background: #e6f2ff;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      border: 1px solid #b3d1f0;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+
+<h1>בודק מהימנות לידיעה - שיטת RACE</h1>
+
+<div class="toggle-box">
+  <button id="toggleBtn" onclick="toggleExplanation()">מה זה שיטת RACE?</button>
+  <div id="explanation" class="hidden">
+    <p><strong>RACE</strong> היא שיטה לזיהוי וניתוח אמינות של תוכן חדשותי חשוד:</p>
+    <ul>
+      <li><strong>Recognize</strong> – זיהוי סימנים מחשידים בתוכן.</li>
+      <li><strong>Analyze</strong> – ניתוח המסר: עובדות או רגש?</li>
+      <li><strong>Contextualize</strong> – בדיקת הקשר והשלמות.</li>
+      <li><strong>Evaluate</strong> – הערכת מטרת הידיעה.</li>
+    </ul>
+  </div>
+</div>
+
+<label for="imageUpload"><strong>העלה תמונה של הידיעה שברצונך לבדוק:</strong></label>
+<input type="file" id="imageUpload" accept="image/*">
+
+<form id="raceForm">
+  <!-- כל השאלות - ללא שינוי -->
+  <fieldset>
+    <legend>1. זיהוי (Recognize)</legend>
+    <div class="question">האם יש לידיעה מקור מהימן?<br>
+      <label><input type="radio" name="recognize1" value="2"> כן</label>
+      <label><input type="radio" name="recognize1" value="0"> לא</label>
+    </div>
+    <div class="question">האם מצוין מועד או תאריך ברור?<br>
+      <label><input type="radio" name="recognize2" value="2"> כן</label>
+      <label><input type="radio" name="recognize2" value="0"> לא</label>
+    </div>
+    <div class="question">האם נעשה שימוש בשפה דרמטית או רגשית מאוד?<br>
+      <label><input type="radio" name="recognize3" value="0"> כן</label>
+      <label><input type="radio" name="recognize3" value="2"> לא</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>2. ניתוח (Analyze)</legend>
+    <div class="question">האם הידיעה מתבססת בעיקר על רגשות ולא על עובדות?<br>
+      <label><input type="radio" name="analyze1" value="0"> כן</label>
+      <label><input type="radio" name="analyze1" value="2"> לא</label>
+    </div>
+    <div class="question">האם מוצג רק צד אחד של הסיפור?<br>
+      <label><input type="radio" name="analyze2" value="0"> כן</label>
+      <label><input type="radio" name="analyze2" value="2"> לא</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>3. הקשר (Contextualize)</legend>
+    <div class="question">האם ניתן למצוא מידע דומה גם במקורות נוספים?<br>
+      <label><input type="radio" name="context1" value="2"> כן</label>
+      <label><input type="radio" name="context1" value="0"> לא</label>
+    </div>
+    <div class="question">האם הידיעה מוצגת בהקשר הרחב שלה?<br>
+      <label><input type="radio" name="context2" value="2"> כן</label>
+      <label><input type="radio" name="context2" value="0"> לא</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>4. הערכה (Evaluate)</legend>
+    <div class="question">האם מטרת הידיעה היא לעורר כעס, פחד או שנאה?<br>
+      <label><input type="radio" name="evaluate1" value="0"> כן</label>
+      <label><input type="radio" name="evaluate1" value="2"> לא</label>
+    </div>
+    <div class="question">האם היית משתף את הידיעה כפי שהיא?<br>
+      <label><input type="radio" name="evaluate2" value="2"> כן</label>
+      <label><input type="radio" name="evaluate2" value="0"> לא</label>
+    </div>
+  </fieldset>
+
+  <button type="button" onclick="calculateScore()">חשב ציון מהימנות</button>
+  <button type="button" onclick="generateSummary()">צור סיכום מילולי</button>
+</form>
+
+<div class="result" id="result"></div>
+<div class="result" id="summaryResult"></div>
+
+<script>
+  function toggleExplanation() {
+    const explanation = document.getElementById("explanation");
+    const toggleBtn = document.getElementById("toggleBtn");
+    explanation.classList.toggle("hidden");
+    toggleBtn.classList.toggle("open");
+  }
+
+  function calculateScore() {
+    const radios = document.querySelectorAll('input[type="radio"]:checked');
+    let score = 0;
+    radios.forEach(rb => score += parseInt(rb.value));
+    const percent = Math.round((score / 18) * 100);
+    let verdict = '';
+    if (percent >= 80) verdict = '✅ מהימן מאוד';
+    else if (percent >= 60) verdict = '🟡 מהימן חלקית';
+    else if (percent >= 40) verdict = '🟠 חשוד';
+    else verdict = '🔴 תוכן מניפולטיבי';
+    document.getElementById('result').innerText = `ציון: ${percent}% מהימנות\nהערכה: ${verdict}`;
+  }
+
+  function generateSummary() {
+  const questions = [
+    { name: 'recognize1', pos: 'קיים מקור מהימן', neg: 'לא קיים מקור מהימן' },
+    { name: 'recognize2', pos: 'קיים מועד או תאריך ברור', neg: 'אין מועד או תאריך ברור' },
+    { name: 'recognize3', pos: 'השפה ניטרלית', neg: 'השפה דרמטית או רגשית' },
+    { name: 'analyze1', pos: 'הידיעה מבוססת על עובדות', neg: 'הידיעה מבוססת על רגשות' },
+    { name: 'analyze2', pos: 'מוצגים כמה צדדים של הסיפור', neg: 'מוצג רק צד אחד של הסיפור' },
+    { name: 'context1', pos: 'יש מידע דומה במקורות נוספים', neg: 'אין מידע דומה במקורות נוספים' },
+    { name: 'context2', pos: 'ההקשר הרחב של הידיעה ברור', neg: 'הידיעה חסרת הקשר רחב' },
+    { name: 'evaluate1', pos: 'הידיעה אינה מכוונת לעורר רגשות שליליים', neg: 'הידיעה מכוונת לעורר כעס, פחד או שנאה' },
+    { name: 'evaluate2', pos: 'המשיב היה משתף את הידיעה', neg: 'המשיב לא היה משתף את הידיעה' }
+  ];
+
+  let positives = [], negatives = [];
+
+  questions.forEach(q => {
+    const selected = document.querySelector(`input[name="${q.name}"]:checked`);
+    if (selected) {
+      selected.value === "2" ? positives.push(q.pos) : negatives.push(q.neg);
+    }
+  });
+
+  let output = "";
+
+  if (positives.length > 0) {
+    output += "✅ היבטים המחזקים את מהימנות הידיעה:\n- " + positives.join("\n- ") + "\n";
+  }
+
+  if (negatives.length > 0) {
+    output += "\n⚠️ היבטים המחלישים את מהימנות הידיעה:\n- " + negatives.join("\n- ");
+  }
+
+  if (!output) {
+    output = "לא נבחרו מספיק תשובות ליצירת סיכום.";
+  }
+
+  document.getElementById('summaryResult').innerText = output;
+}
+
+</script>
+
+</body>
+</html>
