@@ -157,114 +157,139 @@
   </ul>
 </div>
 
-<!-- טופס השאלון -->
 <form id="raceForm">
-  <!-- כל fieldset כרגיל... -->
-  <!-- ... -->
+  <fieldset>
+    <legend>1. זיהוי (Recognize)</legend>
+    <div class="question">האם יש לידיעה מקור מהימן?<br>
+      <label><input type="radio" name="recognize1" value="2"> כן</label>
+      <label><input type="radio" name="recognize1" value="0"> לא</label>
+    </div>
+    <div class="question">האם מצוין מועד או תאריך ברור?<br>
+      <label><input type="radio" name="recognize2" value="2"> כן</label>
+      <label><input type="radio" name="recognize2" value="0"> לא</label>
+    </div>
+    <div class="question">האם נעשה שימוש בשפה דרמטית או רגשית מאוד?<br>
+      <label><input type="radio" name="recognize3" value="0"> כן</label>
+      <label><input type="radio" name="recognize3" value="2"> לא</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>2. ניתוח (Analyze)</legend>
+    <div class="question">האם הידיעה מתבססת בעיקר על רגשות ולא על עובדות?<br>
+      <label><input type="radio" name="analyze1" value="0"> כן</label>
+      <label><input type="radio" name="analyze1" value="2"> לא</label>
+    </div>
+    <div class="question">האם מוצג רק צד אחד של הסיפור?<br>
+      <label><input type="radio" name="analyze2" value="0"> כן</label>
+      <label><input type="radio" name="analyze2" value="2"> לא</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>3. הקשר (Contextualize)</legend>
+    <div class="question">האם ניתן למצוא מידע דומה גם במקורות נוספים?<br>
+      <label><input type="radio" name="context1" value="2"> כן</label>
+      <label><input type="radio" name="context1" value="0"> לא</label>
+    </div>
+    <div class="question">האם הידיעה מוצגת בהקשר הרחב שלה?<br>
+      <label><input type="radio" name="context2" value="2"> כן</label>
+      <label><input type="radio" name="context2" value="0"> לא</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>4. הערכה (Evaluate)</legend>
+    <div class="question">האם מטרת הידיעה היא לעורר כעס, פחד או שנאה?<br>
+      <label><input type="radio" name="evaluate1" value="0"> כן</label>
+      <label><input type="radio" name="evaluate1" value="2"> לא</label>
+    </div>
+    <div class="question">האם היית משתף את הידיעה כפי שהיא?<br>
+      <label><input type="radio" name="evaluate2" value="2"> כן</label>
+      <label><input type="radio" name="evaluate2" value="0"> לא</label>
+    </div>
+  </fieldset>
+
   <button type="button" onclick="calculateAndSummarize()">חשב ציון וסכם</button>
-  <button type="button" onclick="downloadAsImage()">הורד כתמונה (JPG)</button>
 </form>
 
 <div class="result" id="result"></div>
 <div class="result" id="summaryResult"></div>
 
-<canvas id="summaryCanvas" style="display:none;"></canvas>
-
 <script>
-function toggleExplanation() {
-  const explanation = document.getElementById("explanation");
-  const toggleBtn = document.getElementById("toggleBtn");
-  explanation.classList.toggle("hidden");
-  toggleBtn.classList.toggle("open");
-}
-
-document.getElementById("imageUpload").addEventListener("change", function(event) {
-  const file = event.target.files[0];
-  const preview = document.getElementById("previewImage");
-  if (file && file.type.startsWith("image/")) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      preview.src = e.target.result;
-      preview.style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  } else {
-    preview.src = "";
-    preview.style.display = "none";
+  function toggleExplanation() {
+    const explanation = document.getElementById("explanation");
+    const toggleBtn = document.getElementById("toggleBtn");
+    explanation.classList.toggle("hidden");
+    toggleBtn.classList.toggle("open");
   }
-});
 
-function calculateAndSummarize() {
-  // החישוב הרגיל של ציון + הסיכום המילולי
-  // ... [כפי שהוגדר קודם, כולל summaryResult]
-}
+  document.getElementById("imageUpload").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById("previewImage");
 
-function downloadAsImage() {
-  const canvas = document.getElementById("summaryCanvas");
-  const ctx = canvas.getContext("2d");
-  const imageInput = document.getElementById("imageUpload");
-  const positives = document.getElementById('summaryResult').innerText.match(/\u2705.*?\n([\s\S]*?)(\n\u26A0|$)/);
-  const negatives = document.getElementById('summaryResult').innerText.match(/\u26A0.*?\n([\s\S]*)/);
-  const posLines = positives ? positives[1].trim().split("\n") : [];
-  const negLines = negatives ? negatives[1].trim().split("\n") : [];
-  const title = "סיכום הידיעה - על פי שיטת RACE";
-  const padding = 20;
-  const lineHeight = 30;
-  const image = new Image();
-  const reader = new FileReader();
-  const file = imageInput.files[0];
-  if (!file) {
-    alert("לא נבחרה תמונה.");
-    return;
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.src = "";
+      preview.style.display = "none";
+    }
+  });
+
+  function calculateAndSummarize() {
+    const radios = document.querySelectorAll('input[type="radio"]:checked');
+    let score = 0;
+    radios.forEach(rb => score += parseInt(rb.value));
+    const percent = Math.round((score / 18) * 100);
+    let verdict = '';
+    if (percent >= 80) verdict = '✅ מהימן מאוד';
+    else if (percent >= 60) verdict = '🟡 מהימן חלקית';
+    else if (percent >= 40) verdict = '🟠 חשוד';
+    else verdict = '🔴 תוכן מניפולטיבי';
+    document.getElementById('result').innerText = `ציון: ${percent}% מהימנות\nהערכה: ${verdict}`;
+
+    const questions = [
+      { name: 'recognize1', pos: 'קיים מקור מהימן', neg: 'לא קיים מקור מהימן' },
+      { name: 'recognize2', pos: 'קיים מועד או תאריך ברור', neg: 'אין מועד או תאריך ברור' },
+      { name: 'recognize3', pos: 'השפה ניטרלית', neg: 'השפה דרמטית או רגשית' },
+      { name: 'analyze1', pos: 'הידיעה מבוססת על עובדות', neg: 'הידיעה מבוססת על רגשות' },
+      { name: 'analyze2', pos: 'מוצגים כמה צדדים של הסיפור', neg: 'מוצג רק צד אחד של הסיפור' },
+      { name: 'context1', pos: 'יש מידע דומה במקורות נוספים', neg: 'אין מידע דומה במקורות נוספים' },
+      { name: 'context2', pos: 'ההקשר הרחב של הידיעה ברור', neg: 'הידיעה חסרת הקשר רחב' },
+      { name: 'evaluate1', pos: 'הידיעה אינה מכוונת לעורר רגשות שליליים', neg: 'הידיעה מכוונת לעורר כעס, פחד או שנאה' },
+      { name: 'evaluate2', pos: 'המשיב היה משתף את הידיעה', neg: 'המשיב לא היה משתף את הידיעה' }
+    ];
+
+    let positives = [], negatives = [];
+
+    questions.forEach(q => {
+      const selected = document.querySelector(`input[name="${q.name}"]:checked`);
+      if (selected) {
+        selected.value === "2" ? positives.push(q.pos) : negatives.push(q.neg);
+      }
+    });
+
+    let output = "";
+
+    if (positives.length > 0) {
+      output += "✅ היבטים המחזקים את מהימנות הידיעה:\n- " + positives.join("\n- ") + "\n";
+    }
+
+    if (negatives.length > 0) {
+      output += "\n⚠️ היבטים המחלישים את מהימנות הידיעה:\n- " + negatives.join("\n- ");
+    }
+
+    if (!output) {
+      output = "לא נבחרו מספיק תשובות ליצירת סיכום.";
+    }
+
+    document.getElementById('summaryResult').innerText = output;
   }
-  reader.onload = function(e) {
-    image.onload = function() {
-      const textLines = posLines.length + negLines.length;
-      const textHeight = (textLines + 5) * lineHeight;
-      const imageHeight = image.height * Math.min(700 / image.width, 1);
-      const canvasHeight = padding * 3 + textHeight + imageHeight;
-      const canvasWidth = 800;
-      canvas.width = canvasWidth;
-      canvas.height = canvasHeight;
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#003366";
-      ctx.font = "bold 24px Arial";
-      ctx.fillText(title, padding, padding + 10);
-      let y = padding + 50;
-      ctx.font = "18px Arial";
-      if (posLines.length) {
-        ctx.fillStyle = "green";
-        ctx.fillText("✅ נקודות המחזקות מהימנות:", padding, y);
-        y += lineHeight;
-        posLines.forEach(line => {
-          ctx.fillText("- " + line.replace("- ", ""), padding + 10, y);
-          y += lineHeight;
-        });
-      }
-      if (negLines.length) {
-        ctx.fillStyle = "#cc6600";
-        y += 10;
-        ctx.fillText("⚠️ נקודות שמחלישות מהימנות:", padding, y);
-        y += lineHeight;
-        negLines.forEach(line => {
-          ctx.fillText("- " + line.replace("- ", ""), padding + 10, y);
-          y += lineHeight;
-        });
-      }
-      y += 10;
-      const imageWidth = Math.min(700, image.width);
-      const ratio = imageWidth / image.width;
-      ctx.drawImage(image, padding, y, image.width * ratio, image.height * ratio);
-      const link = document.createElement('a');
-      link.download = "race_summary.jpg";
-      link.href = canvas.toDataURL("image/jpeg");
-      link.click();
-    };
-    image.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
 </script>
 
 </body>
